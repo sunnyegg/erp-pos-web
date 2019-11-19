@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Axios from "axios";
 import storage from "local-storage";
+import { Redirect } from "react-router-dom";
 
 import { Button, Form, FormGroup, Label, Input, Spinner } from "reactstrap";
 
@@ -9,6 +10,7 @@ const LoginScreen = props => {
   const [Password, setPassword] = useState("");
   const [Loading, setLoading] = useState(false);
   const [Error, setError] = useState(false);
+  const [GoHome, setGoHome] = useState(false);
 
   const submitLogin = data => {
     setLoading(true);
@@ -19,12 +21,14 @@ const LoginScreen = props => {
           storage.set("user-type", user.data.user_type);
           storage.set("user-name", user.data.username);
           storage.set("user-token", user.data.token);
+          storage.set("logged-in", true);
 
-          setTimeout(resolve((window.location.href = "/home")), 3000);
+          setTimeout(resolve(setGoHome(true)), 3000);
         })
         .catch(err => {
           setLoading(false);
           setError(true);
+          reject(err);
           console.log(err);
         });
     });
@@ -73,7 +77,8 @@ const LoginScreen = props => {
                   })
                 }
               >
-                {Loading === true ? <Spinner size="sm" color="primary" /> : "Login"}
+                {Loading ? <Spinner size="sm" color="primary" /> : "Login"}
+                {GoHome ? <Redirect to="/home" /> : ""}
               </Button>
             </FormGroup>
           </Form>
