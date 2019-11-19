@@ -1,15 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-// Import Screens
-import LoginScreen from "./Screens/Login";
-import HomeScreen from "./Screens/Home";
+// Import Pages
+import LoginPage from "./Pages/Login";
+import HomePage from "./Pages/Home";
 
 const App = () => {
   return (
     <Router>
-      <Route path={"/"} exact component={LoginScreen} />
-      <Route path={"/home"} component={HomeScreen} />
+      <Route path={"/"} exact component={LoginPage} />
+      <Route path={"/home"} component={HomePage} />
     </Router>
   );
 };
