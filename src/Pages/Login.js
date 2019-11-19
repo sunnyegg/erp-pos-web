@@ -5,7 +5,7 @@ import { Redirect } from "react-router-dom";
 
 import { Button, Form, FormGroup, Label, Input, Spinner } from "reactstrap";
 
-const LoginScreen = props => {
+const LoginPage = props => {
   const [Username, setUsername] = useState("");
   const [Password, setPassword] = useState("");
   const [Loading, setLoading] = useState(false);
@@ -88,4 +88,4 @@ const LoginScreen = props => {
   );
 };
 
-export default LoginScreen;
+export default LoginPage;

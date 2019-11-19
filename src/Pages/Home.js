@@ -39,7 +39,7 @@ import {
   Label
 } from "reactstrap";
 
-const HomeScreen = props => {
+const HomePage = props => {
   const [Data, setData] = useState([]);
   const [Cart, setCart] = useState([]);
   const [CustomerName, setCustomerName] = useState("");
@@ -324,4 +324,4 @@ const HomeScreen = props => {
   );
 };
 
-export default HomeScreen;
+export default HomePage;
