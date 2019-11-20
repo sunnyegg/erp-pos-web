@@ -36,7 +36,8 @@ import {
   ModalFooter,
   Form,
   FormGroup,
-  Label
+  Label,
+  Table
 } from "reactstrap";
 
 const HomePage = props => {
@@ -50,11 +51,13 @@ const HomePage = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setOpen] = useState(false);
   const [ModalCustomer, setModalCustomer] = useState(false);
+  const [ModalCart, setModalCart] = useState(false);
   const [LogOut, setLogOut] = useState(false);
 
   const toggleNav = () => setIsOpen(!isOpen);
   const toggleProfile = () => setOpen(!dropdownOpen);
   const toggleModalCust = () => setModalCustomer(!ModalCustomer);
+  const toggleModalCart = () => setModalCart(!ModalCart);
 
   const getData = () => {
     setLoading(true);
@@ -77,6 +80,7 @@ const HomePage = props => {
   };
 
   const addToCart = data => {
+    console.log(data);
     const { menu_id, menu_name, menu_price, menu_category } = data;
     const order = {
       customer_name: storage.get("customer-name"),
@@ -89,7 +93,6 @@ const HomePage = props => {
     };
 
     setCart([...Cart, order]);
-    console.log(Cart);
   };
 
   const registerCustomer = data => {
@@ -121,7 +124,8 @@ const HomePage = props => {
 
   useEffect(() => {
     getData();
-  }, [Search]);
+    storage.set("cart", Cart);
+  }, [Search, Cart]);
 
   return (
     <div style={{ flex: 1 }}>
@@ -131,12 +135,9 @@ const HomePage = props => {
           <NavbarToggler onClick={toggleNav} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              {/* <NavItem>
-                <Link to="/order">Orders</Link>
-              </NavItem> */}
               <NavItem style={{ marginRight: 20 }}>
-                <Button onClick={() => console.log(Cart)} style={{ backgroundColor: "#0fbcf9" }}>
-                  <img src={CartIcon} />
+                <Button onClick={toggleModalCart} style={{ backgroundColor: "#0fbcf9" }}>
+                  <img style={{ marginRight: 5 }} src={CartIcon} />
                   <Badge style={{ marginLeft: 5 }} color="success">
                     {Cart.length}
                   </Badge>
@@ -162,6 +163,48 @@ const HomePage = props => {
           </Collapse>
         </Navbar>
       </div>
+
+      <Modal isOpen={ModalCart} toggle={toggleModalCart}>
+        <ModalHeader toggle={toggleModalCart}>Cart</ModalHeader>
+        <ModalBody>
+          <Row>
+            <Col>Pelayan: {storage.get("user-name")}</Col>
+          </Row>
+          <Table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Menu Name</th>
+                <th>Menu Category</th>
+                <th>Order Quantity</th>
+                <th>Price</th>
+                <th>Order Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Cart.map((menu, index) => {
+                return (
+                  <tr key={index}>
+                    <th scope="row">{index + 1}</th>
+                    <td>{menu.menu_name}</td>
+                    <td>{menu.menu_category}</td>
+                    <td>{menu.order_quantity}</td>
+                    <td>{menu.menu_price}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary">
+            {Loading ? <Spinner style={{ color: "white" }} /> : "Order"}
+          </Button>{" "}
+          <Button color="danger" onClick={toggleModalCart}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
 
       <div>
         {storage.get("logged-in") ? "" : <Alert color="danger">You are not logged in!</Alert>}
